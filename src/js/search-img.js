@@ -18,12 +18,13 @@ function handleSearch(event) {
 
   searchPhoto(query)
     .then(markupPhoto)
-    // .catch(onFetchError)
+    .catch(onFetchError)
     .finally(() => form.reset());
+  console.log(query);
 }
 
 function searchPhoto(value) {
-  const BAZE_URL = 'https://pixabay.com/api';
+  const BAZE_URL = 'https://pixabay.com/api/';
   const API_KEY = '41849458-2d98265cf06659a45ba73a30c';
   const url = `${BAZE_URL}?key=${API_KEY}&q=${value}&image_type=photo&orientation=horizontal&safesearch=true`;
   return fetch(url).then(resp => {
