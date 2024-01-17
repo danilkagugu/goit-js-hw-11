@@ -18,7 +18,7 @@ function handleSearch(event) {
 
   searchPhoto(query)
     .then(markupPhoto)
-    .catch(onFetchError)
+    // .catch(onFetchError)
     .finally(() => form.reset());
 }
 
