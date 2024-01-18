@@ -7,7 +7,7 @@ import SimpleLightbox from 'simplelightbox';
 // Додатковий імпорт стилів
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const searchForm = document.querySelector('.search-form');
+const searchForm = document.querySelector('.js-search-form');
 const ulEl = document.querySelector('.list-photo');
 searchForm.addEventListener('submit', handleSearch);
 
@@ -20,13 +20,12 @@ function handleSearch(event) {
     .then(markupPhoto)
     .catch(onFetchError)
     .finally(() => form.reset());
-  console.log(query);
 }
 
 function searchPhoto(value) {
-  const BAZE_URL = 'https://pixabay.com/api/';
+  const BAZE_URL = 'https://pixabay.com/api';
   const API_KEY = '41849458-2d98265cf06659a45ba73a30c';
-  const url = `${BAZE_URL}?key=${API_KEY}&q=${value}&image_type=photo&orientation=horizontal&safesearch=true`;
+  const url = `${BAZE_URL}/?key=${API_KEY}&q=${value}&image_type=photo&orientation=horizontal&safesearch=true`;
   return fetch(url).then(resp => {
     if (!resp.ok) {
       throw new Error(resp.statusText);
@@ -37,19 +36,22 @@ function searchPhoto(value) {
 }
 
 function onFetchError(error) {
-  console.error(error);
-  iziToast.show({
-    title: 'Error',
-    message:
-      'Sorry, there are no images matching your search query. Please try again!',
-    position: 'topCenter',
-    color: 'red',
-  });
+  if (error) {
+    console.error(error);
+    iziToast.show({
+      title: 'Error',
+      message:
+        'Sorry, there are no images matching your search query. Please try again!',
+      position: 'topRight',
+      color: 'red',
+    });
+  }
 }
 function markupPhoto({ hits }) {
   const markup = hits
     .map(
       hits => `<li class="gallery-item">
+  
   <a class="gallery-link" href="${hits.largeImageURL}">
     <img
       class="gallery-image"
@@ -58,13 +60,24 @@ function markupPhoto({ hits }) {
       alt="${hits.tags}"
     />
   </a>
-   <p>Likes: ${hits.likes}</p>
-   <p>Views: ${hits.views}</p>
-   <p>Comment: ${hits.comments}</p>
-   <p>Downloads: ${hits.downloads}</p>
+  <ul class="img-list">
+  <li class="img-info">
+   <p class="img-text">Likes: <br><span>${hits.likes}</span></p>
+   <p class="img-text">Views: <br><span>${hits.views}</span></p>
+   <p class="img-text">Comment: <br><span>${hits.comments}</span></p>
+   <p class="img-text">Downloads: <br><span>${hits.downloads}</span></p>
+   </li>
+   </ul>
+
 </li>`
     )
     .join('');
 
   ulEl.innerHTML = markup;
+  modalLightboxGallery.refresh();
 }
+
+const modalLightboxGallery = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});

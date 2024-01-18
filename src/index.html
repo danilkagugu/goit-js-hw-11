@@ -5,16 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home work №11</title>
     <link rel="stylesheet" href="./css/search-img.css" />
+    <link rel="stylesheet" href="./css/reset.css" />
   </head>
   <body>
-    <form class="form search-form">
+    <form class="form js-search-form">
       <div class="form-group">
-        <input type="text" name="query" />
+        <input
+          class="form-input"
+          type="text"
+          name="query"
+          placeholder="Search images..."
+        />
       </div>
-      <button class="btn-submit" type="submit">Пошук</button>
+      <button class="btn-submit" type="submit">Search</button>
     </form>
 
-    <div class="photo-container">
+    <div class="gallery">
       <ul class="list-photo"></ul>
     </div>
 
