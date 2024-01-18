@@ -33,3 +33,9 @@ img {
   max-width: 100%;
   height: auto;
 }
+
+body {
+  background-image: url(../img/backround.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+}

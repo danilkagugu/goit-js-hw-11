@@ -117,10 +117,14 @@
   font-weight: 500;
   line-height: 24px; /* 150% */
   letter-spacing: 0.64px;
+  box-shadow: 0 5px 15px 0 rgba(11, 99, 246, 1);
+  transition: 0.5s;
 }
 
 .btn-submit:hover {
   background-color: #6c8cff;
+  transform: translate(0, -3px);
+  box-shadow: 0 20px 40px 0 rgba(11, 99, 246, 1);
 }
 
 .list-photo {
@@ -131,8 +135,16 @@
 }
 
 .gallery-image {
+  display: inline-block;
+  overflow: hidden;
   width: 360px;
   height: 200px;
+  border-radius: 50px;
+  transition: 1s;
+}
+
+.gallery-image:hover {
+  transform: scale(1.05);
 }
 
 .img-info {
