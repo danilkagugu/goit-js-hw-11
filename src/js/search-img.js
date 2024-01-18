@@ -9,17 +9,24 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const searchForm = document.querySelector('.js-search-form');
 const ulEl = document.querySelector('.list-photo');
+const loader = document.querySelector('.loader');
+
 searchForm.addEventListener('submit', handleSearch);
 
 function handleSearch(event) {
   event.preventDefault();
+  getLoader();
+  ulEl.innerHTML = '';
+
   const form = event.currentTarget;
   const query = form.elements.query.value;
 
-  searchPhoto(query)
-    .then(markupPhoto)
-    .catch(onFetchError)
-    .finally(() => form.reset());
+  setTimeout(() => {
+    searchPhoto(query)
+      .then(markupPhoto)
+      .catch(onFetchError)
+      .finally(() => form.reset());
+  }, 1000);
 }
 
 function searchPhoto(value) {
@@ -81,3 +88,10 @@ const modalLightboxGallery = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
   captionDelay: 250,
 });
+
+function getLoader() {
+  loader.style.display = 'inline-block';
+  setTimeout(() => {
+    loader.style.display = 'none';
+  }, 1000);
+}
