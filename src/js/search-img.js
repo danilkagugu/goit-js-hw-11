@@ -24,6 +24,15 @@ function handleSearch(event) {
   setTimeout(() => {
     searchPhoto(query)
       .then(markupPhoto)
+      .then(data => {
+        if (data.hits.length <= 0) {
+          iziToast.error({
+            title: 'Error',
+            message:
+              'Sorry, there are no images matching your search query. Please try again!',
+          });
+        }
+      })
       .catch(onFetchError)
       .finally(() => form.reset());
   }, 1000);
@@ -34,7 +43,7 @@ function searchPhoto(value) {
   const API_KEY = '41849458-2d98265cf06659a45ba73a30c';
   const url = `${BAZE_URL}/?key=${API_KEY}&q=${value}&image_type=photo&orientation=horizontal&safesearch=true`;
   return fetch(url).then(resp => {
-    if (!resp.ok) {
+    if (!resp.ok || value === '') {
       throw new Error(resp.statusText);
     }
 
@@ -43,17 +52,15 @@ function searchPhoto(value) {
 }
 
 function onFetchError(error) {
-  if (error) {
-    console.error(error);
-    iziToast.show({
-      title: 'Error',
-      message:
-        'Sorry, there are no images matching your search query. Please try again!',
-      position: 'topRight',
-      color: 'red',
-    });
-  }
+  console.error(error);
+
+  iziToast.error({
+    title: 'Error',
+    message:
+      'Sorry, there are no images matching your search query. Please try again!',
+  });
 }
+
 function markupPhoto({ hits }) {
   const markup = hits
     .map(
