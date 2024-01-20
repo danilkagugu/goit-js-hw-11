@@ -13,6 +13,8 @@ const searchForm = document.querySelector('.js-search-form');
 const ulEl = document.querySelector('.list-photo');
 const loader = document.querySelector('.loader');
 
+loader.style.display = 'none';
+
 searchForm.addEventListener('submit', handleSearch);
 
 function handleSearch(event) {
@@ -22,6 +24,16 @@ function handleSearch(event) {
   ulEl.innerHTML = '';
   const form = event.currentTarget;
   const query = form.elements.query.value.trim();
+
+  if (query === '') {
+    iziToast.show({
+      title: 'Error',
+      color: 'yellow',
+      message: 'Please search for something',
+    });
+
+    return;
+  }
 
   searchPhoto(query)
     .then(data => {
