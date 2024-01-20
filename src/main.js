@@ -4,6 +4,11 @@ import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
+const modalLightboxGallery = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
+
 const searchForm = document.querySelector('.js-search-form');
 const ulEl = document.querySelector('.list-photo');
 const loader = document.querySelector('.loader');
@@ -12,34 +17,43 @@ searchForm.addEventListener('submit', handleSearch);
 
 function handleSearch(event) {
   event.preventDefault();
-  getLoader();
-  ulEl.innerHTML = '';
+  loader.style.display = 'inline-block';
 
+  ulEl.innerHTML = '';
   const form = event.currentTarget;
-  const query = form.elements.query.value;
-  setTimeout(() => {
-    searchPhoto(query)
-      .then(data => {
-        if (!data.hits.length) {
-          iziToast.error({
-            title: 'Error',
-            message:
-              'Sorry, there are no images matching your search query. Please try again!',
-          });
-        }
-        ulEl.innerHTML = ('beforeend', markupPhoto(data.hits));
-        modalLightboxGallery.refresh();
-      })
-      .catch(onFetchError)
-      .finally(() => form.reset());
-  }, 1000);
+  const query = form.elements.query.value.trim();
+
+  searchPhoto(query)
+    .then(data => {
+      if (!data.hits.length || query === '') {
+        iziToast.error({
+          title: 'Error',
+          message:
+            'Sorry, there are no images matching your search query. Please try again!',
+        });
+
+        return;
+      }
+      ulEl.innerHTML = ('beforeend', markupPhoto(data.hits));
+      modalLightboxGallery.refresh();
+    })
+    .catch(onFetchError)
+    .finally(() => form.reset());
+  loader.style.display = 'none';
 }
 function searchPhoto(value) {
   const BAZE_URL = 'https://pixabay.com/api';
   const API_KEY = '41849458-2d98265cf06659a45ba73a30c';
-  const url = `${BAZE_URL}/?key=${API_KEY}&q=${value}&image_type=photo&orientation=horizontal&safesearch=true`;
+  const urlParams = new URLSearchParams({
+    key: API_KEY,
+    q: value,
+    image_type: 'photo',
+    orientation: 'horizontal',
+    safesearch: 'true',
+  });
+  const url = `${BAZE_URL}/?${urlParams}`;
   return fetch(url).then(resp => {
-    if (!resp.ok || value === '') {
+    if (!resp.ok) {
       throw new Error(resp.statusText);
     }
 
@@ -88,16 +102,4 @@ function markupPhoto(arr) {
         </li>`
     )
     .join('');
-}
-
-const modalLightboxGallery = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionDelay: 250,
-});
-
-function getLoader() {
-  loader.style.display = 'inline-block';
-  setTimeout(() => {
-    loader.style.display = 'none';
-  }, 1000);
 }
