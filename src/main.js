@@ -31,13 +31,14 @@ function handleSearch(event) {
       color: 'yellow',
       message: 'Please search for something',
     });
-
+    loader.style.display = 'none';
     return;
   }
 
   searchPhoto(query)
     .then(data => {
-      if (!data.hits.length || query === '') {
+      loader.style.display = 'none';
+      if (!data.hits.length) {
         iziToast.error({
           title: 'Error',
           message:
@@ -49,9 +50,11 @@ function handleSearch(event) {
       ulEl.innerHTML = ('beforeend', markupPhoto(data.hits));
       modalLightboxGallery.refresh();
     })
-    .catch(onFetchError)
+    .catch(err => {
+      loader.style.display = 'none';
+      console.log(err);
+    })
     .finally(() => form.reset());
-  loader.style.display = 'none';
 }
 function searchPhoto(value) {
   const BAZE_URL = 'https://pixabay.com/api';
