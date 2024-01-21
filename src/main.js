@@ -47,17 +47,17 @@ function handleSearch(event) {
 
         return;
       }
-      ulEl.innerHTML = ('beforeend', markupPhoto(data.hits));
+      ulEl.innerHTML = markupPhoto(data.hits);
       modalLightboxGallery.refresh();
     })
     .catch(err => {
-      loader.style.display = 'none';
       console.log(err);
     })
     .finally(() => form.reset());
+  loader.style.display = 'none';
 }
 function searchPhoto(value) {
-  const BAZE_URL = 'https://pixabay.com/api';
+  const BASE_URL = 'https://pixabay.com/api';
   const API_KEY = '41849458-2d98265cf06659a45ba73a30c';
   const urlParams = new URLSearchParams({
     key: API_KEY,
@@ -66,22 +66,13 @@ function searchPhoto(value) {
     orientation: 'horizontal',
     safesearch: 'true',
   });
-  const url = `${BAZE_URL}/?${urlParams}`;
+  const url = `${BASE_URL}/?${urlParams}`;
   return fetch(url).then(resp => {
     if (!resp.ok) {
       throw new Error(resp.statusText);
     }
 
     return resp.json();
-  });
-}
-function onFetchError(error) {
-  console.error(error);
-
-  iziToast.error({
-    title: 'Error',
-    message:
-      'Sorry, there are no images matching your search query. Please try again!',
   });
 }
 
