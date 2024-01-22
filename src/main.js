@@ -13,13 +13,12 @@ const searchForm = document.querySelector('.js-search-form');
 const ulEl = document.querySelector('.list-photo');
 const loader = document.querySelector('.loader');
 
-loader.style.display = 'none';
-
 searchForm.addEventListener('submit', handleSearch);
+
+loader.style.display = 'none';
 
 function handleSearch(event) {
   event.preventDefault();
-  loader.style.display = 'inline-block';
 
   ulEl.innerHTML = '';
   const form = event.currentTarget;
@@ -31,13 +30,12 @@ function handleSearch(event) {
       color: 'yellow',
       message: 'Please search for something',
     });
-    loader.style.display = 'none';
     return;
   }
+  loader.style.display = 'inline-block';
 
   searchPhoto(query)
     .then(data => {
-      loader.style.display = 'none';
       if (!data.hits.length) {
         iziToast.error({
           title: 'Error',
