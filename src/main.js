@@ -31,7 +31,7 @@ function handleSearch(event) {
       color: 'yellow',
       message: 'Please search for something',
     });
-    // loader.style.display = 'none';
+    loader.style.display = 'none';
     return;
   }
 
