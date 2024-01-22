@@ -14,11 +14,12 @@ const ulEl = document.querySelector('.list-photo');
 const loader = document.querySelector('.loader');
 
 searchForm.addEventListener('submit', handleSearch);
-
 loader.style.display = 'none';
 
 function handleSearch(event) {
   event.preventDefault();
+
+  loader.style.display = 'inline-block';
 
   ulEl.innerHTML = '';
   const form = event.currentTarget;
@@ -30,9 +31,9 @@ function handleSearch(event) {
       color: 'yellow',
       message: 'Please search for something',
     });
+    // loader.style.display = 'none';
     return;
   }
-  loader.style.display = 'inline-block';
 
   searchPhoto(query)
     .then(data => {
@@ -51,8 +52,11 @@ function handleSearch(event) {
     .catch(err => {
       console.log(err);
     })
-    .finally(() => form.reset());
-  loader.style.display = 'none';
+    .finally(() => {
+      form.reset();
+      loader.style.display = 'none';
+    });
+  // проблема була в тому що я вставив loader.style.display = 'none' не у файналі, тобто промахнувся і вставив його за дужку, воно було під ним і мабуть тому воно не показувало)
 }
 function searchPhoto(value) {
   const BASE_URL = 'https://pixabay.com/api';
