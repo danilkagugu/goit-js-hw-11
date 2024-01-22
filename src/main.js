@@ -49,9 +49,7 @@ function handleSearch(event) {
       ulEl.innerHTML = markupPhoto(data.hits);
       modalLightboxGallery.refresh();
     })
-    .catch(err => {
-      console.log(err);
-    })
+    .catch(onFetchError)
     .finally(() => {
       form.reset();
       loader.style.display = 'none';
@@ -110,4 +108,13 @@ function markupPhoto(arr) {
         </li>`
     )
     .join('');
+}
+
+function onFetchError(error) {
+  console.error(error);
+  iziToast.error({
+    title: 'Error',
+    message:
+      'Sorry, there are no images matching your search query. Please try again!',
+  });
 }
